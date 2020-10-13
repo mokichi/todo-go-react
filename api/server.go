@@ -2,31 +2,22 @@ package main
 
 import (
 	"fmt"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"repository"
+	"entity"
 )
 
-type Task struct {
-	gorm.Model
-	Title     string
-	Completed bool `gorm:"default:false"`
-}
-
 func main() {
-	dsn := "host=db user=postgres password=postgres dbname=todo_dev port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
+	repo := repository.NewTaskRepository()
+	task := entity.Task{Title: "Test"}
+	err := repo.Create(&task)
+	fmt.Println(task, err)
 
-	db.AutoMigrate(&Task{})
+	err = repo.Update(&task, map[string]interface{}{"Completed": true})
+	fmt.Println(task, err)
 
-	task := Task{Title: "Test"}
-	db.Create(&task)
-	fmt.Println(task)
+	err = repo.Delete(&task)
+	fmt.Println(err)
 
-	db.Model(&task).Updates(map[string]interface{}{"Completed": true})
-	fmt.Println(task)
-
-	db.Delete(&task)
+	t, err := repo.Find(task.ID)
+	fmt.Println(t, err)
 }

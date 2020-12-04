@@ -2,7 +2,7 @@ package repository
 
 import (
 	"gorm.io/gorm"
-	"entity"
+	"todo/entity"
 )
 
 type TaskRepository struct {

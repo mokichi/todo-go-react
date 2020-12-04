@@ -10,7 +10,9 @@ services:
   api:
     image: golang:1.15.2-alpine3.12
     command: go run server.go
+    working_dir: /go/src/api
     volumes:
-      - ./api:/go
+      - ./api:/go/src/api
+      - ./go-pkg-data:/go/pkg
     depends_on:
       - db

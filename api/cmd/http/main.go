@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"todo/repository"
-	"todo/entity"
+	"todo/internal/entity"
+	"todo/internal/repository"
 )
 
 func main() {

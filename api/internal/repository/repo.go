@@ -1,9 +1,6 @@
 package repository
 
-import (
-	"gorm.io/gorm"
-	"todo/entity"
-)
+import "gorm.io/gorm"
 
 type Repo interface {
 	Find(entity interface{}, id uint) error
@@ -34,8 +31,4 @@ func (r repo) Update(entity interface{}, attrs interface{}) error {
 
 func (r repo) Delete(entity interface{}) error {
 	return r.db.Delete(entity).Error
-}
-
-func init() {
-	db.AutoMigrate(&entity.Task{})
 }

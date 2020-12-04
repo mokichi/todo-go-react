@@ -7,6 +7,8 @@ services:
       POSTGRES_DB: todo_dev
     volumes:
       - ./postgresql-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
   api:
     image: golang:1.15.2-alpine3.12
     command: go run server.go

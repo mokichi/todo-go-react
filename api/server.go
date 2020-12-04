@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	repo := repository.NewTaskRepository()
+	repo := repository.NewRepo()
 	task := entity.Task{Title: "Test"}
 	err := repo.Create(&task)
 	fmt.Println(task, err)
@@ -18,6 +18,7 @@ func main() {
 	err = repo.Delete(&task)
 	fmt.Println(err)
 
-	t, err := repo.Find(task.ID)
+	t := entity.Task{}
+	err = repo.Find(&t, task.ID)
 	fmt.Println(t, err)
 }

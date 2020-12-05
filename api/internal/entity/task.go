@@ -1,9 +1,11 @@
 package entity
 
-import "gorm.io/gorm"
+import "time"
 
 type Task struct {
-	gorm.Model
-	Title     string
-	Completed bool `gorm:"default:false"`
+	ID        uint      `json:"id"`
+	Title     string    `json:"title"`
+	Completed bool      `gorm:"default:false" json:"completed"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }

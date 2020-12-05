@@ -1,4 +1,4 @@
-package repository
+package orm
 
 import (
 	"gorm.io/driver/postgres"
@@ -7,23 +7,21 @@ import (
 	"time"
 )
 
-var db *gorm.DB = newDB()
-
-func newDB() *gorm.DB {
+func NewDB() (*gorm.DB, error) {
 	dsn := os.Getenv("DATABASE_DSN")
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	sqlDB.SetMaxIdleConns(5)
 	sqlDB.SetMaxOpenConns(10)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	return db
+	return db, nil
 }

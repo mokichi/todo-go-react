@@ -10,8 +10,11 @@ services:
     ports:
       - 5432:5432
   api:
-    image: golang:1.15.2-alpine3.12
-    command: go run cmd/http/main.go
+    build:
+      context: ./api
+      dockerfile: ./build/package/Dockerfile.dev
+    command: |
+      reflex -r '(\.go|go\.mod)' -s go run cmd/http/main.go
     environment:
       DATABASE_DSN: host=db user=postgres password=postgres dbname=todo_dev port=5432 sslmode=disable
     working_dir: /go/src/api

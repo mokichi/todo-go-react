@@ -1,0 +1,7 @@
+FROM golang:1.15.2-alpine3.12
+ENV LANG C.UTF-8
+
+RUN apk add --update --no-cache git && \
+    go get github.com/cespare/reflex
+
+WORKDIR /go/src/api

@@ -18,5 +18,7 @@ services:
     volumes:
       - ./api:/go/src/api
       - ./go-pkg-data:/go/pkg
+    ports:
+      - 1323:1323
     depends_on:
       - db

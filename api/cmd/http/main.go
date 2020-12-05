@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"todo/internal/entity"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"todo/internal/controller"
 	"todo/internal/orm"
 )
 
@@ -12,17 +13,13 @@ func main() {
 		panic(err)
 	}
 
-	task := entity.Task{Title: "Test"}
-	err = db.Create(&task).Error
-	fmt.Println(task, err)
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-	err = db.Model(&task).Updates(map[string]interface{}{"Completed": true}).Error
-	fmt.Println(task, err)
+	tasks_controller := controller.TasksController{DB: db}
 
-	err = db.Delete(&task).Error
-	fmt.Println(err)
+	e.GET("/tasks", tasks_controller.Index)
 
-	t := entity.Task{}
-	err = db.First(&t, task.ID).Error
-	fmt.Println(t, err)
+	e.Logger.Fatal(e.Start(":1323"))
 }

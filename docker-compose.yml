@@ -13,8 +13,7 @@ services:
     build:
       context: ./api
       dockerfile: ./build/package/Dockerfile.dev
-    command: |
-      reflex -r '(\.go|go\.mod)' -s go run cmd/http/main.go
+    command: reflex -r '(\.go|go\.mod)' -s go run cmd/http/main.go
     environment:
       DATABASE_DSN: host=db user=postgres password=postgres dbname=todo_dev port=5432 sslmode=disable
     working_dir: /go/src/api
@@ -25,3 +24,14 @@ services:
       - 1323:1323
     depends_on:
       - db
+  spa:
+    image: node:14.15.1-alpine3.12
+    command: yarn start
+    environment:
+      API_BASE_URL: http://localhost:1323
+    working_dir: /work
+    volumes:
+      - ./spa:/work
+      - ./yarn-cache:/usr/local/share/.cache/yarn/v6
+    ports:
+      - 3000:3000

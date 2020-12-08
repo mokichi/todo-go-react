@@ -25,12 +25,14 @@ func (controller *TasksController) Completed(c echo.Context) error {
 }
 
 type taskParams struct {
-	Title     string
+	Title     *string
 	Completed *bool
 }
 
 func setParamsToTask(task *entity.Task, params taskParams) {
-	task.Title = params.Title
+	if params.Title != nil {
+		task.Title = *params.Title
+	}
 	if params.Completed != nil {
 		task.Completed = *params.Completed
 	}

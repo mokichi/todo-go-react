@@ -11,7 +11,7 @@ type TasksUsecase struct {
 
 func (u TasksUsecase) FindByCompleted(completed bool) []entity.Task {
 	tasks := make([]entity.Task, 0)
-	u.DB.Where("completed = ?", completed).Find(&tasks)
+	u.DB.Where("completed = ?", completed).Order("updated_at DESC").Find(&tasks)
 	return tasks
 }
 

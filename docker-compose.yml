@@ -27,8 +27,8 @@ services:
   spa:
     image: node:14.15.1-alpine3.12
     command: yarn start
-    environment:
-      API_BASE_URL: http://localhost:1323
+    env_file:
+      - .env.local
     working_dir: /work
     volumes:
       - ./spa:/work

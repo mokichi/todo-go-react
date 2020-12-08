@@ -16,7 +16,8 @@ export default function TaskForm({ addTask }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" ref={inputEl} />
+      <input type="text" ref={inputEl} placeholder="New task title" />
+      <button type="submit">Submit</button>
     </form>
   )
 }

@@ -1,46 +1,44 @@
 import { useState, useEffect } from 'react'
 import TaskForm from './components/TaskForm'
 import TodoList from './components/TodoList'
+import axios from 'axios'
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([])
-  const addTask = (title: string) => {
-    const newTask = {
-      id: tasks[tasks.length - 1].id + 1,
-      title: title,
-      completed: false,
-      createdAt: new Date(),
-      updatedAt: new Date()
+  const [completedTasks, setCompletedTasks] = useState<Task[]>([])
+  const addTask = async (title: string) => {
+    if (!title) {
+      return
     }
-    setTasks(tasks.concat(newTask))
+    const { data } = await axios.post<Task>('/tasks', { title })
+    setTasks(tasks.concat(data))
   }
-  const toggleTaskCompleted = (task: Task) => {
-    const newTasks = tasks.map(t => {
-      if (t.id === task.id) {
-        t.completed = !t.completed
-      }
-      return t;
+  const toggleTaskCompleted = async (task: Task) => {
+    const { data } = await axios.patch<Task>(`/tasks/${task.id}`, {
+      completed: !task.completed
     })
-    setTasks(newTasks)
+    if (data.completed) {
+      setTasks(tasks.filter(t => t.id !== data.id))
+      setCompletedTasks(completedTasks.concat(data).sort((a, b) => {
+        return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
+      }))
+    } else {
+      setCompletedTasks(completedTasks.filter(t => t.id !== data.id))
+      setTasks(tasks.concat(data).sort((a, b) => {
+        return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
+      }))
+    }
   }
   
   useEffect(() => {
-    setTasks([
-      {
-        id: 1,
-        title: 'Task 1',
-        completed: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 2,
-        title: 'Task 2',
-        completed: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ])
+    axios.get<Task[]>('/tasks')
+      .then(({ data }) => {
+        setTasks(data)
+      })
+    axios.get<Task[]>('/tasks/completed')
+      .then(({ data }) => {
+        setCompletedTasks(data)
+      })
   }, [])
 
   return (
@@ -48,6 +46,9 @@ export default function App() {
       <TaskForm addTask={addTask} />
       <TodoList
         tasks={tasks} 
+        toggleTaskCompleted={toggleTaskCompleted} />
+      <TodoList
+        tasks={completedTasks} 
         toggleTaskCompleted={toggleTaskCompleted} />
     </div>
   )

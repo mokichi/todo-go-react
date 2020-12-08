@@ -2,15 +2,15 @@ import TodoItem from './TodoItem'
 
 type Props = {
   tasks: Task[],
-  updateTask?: (task: Task, params: TaskUpdateParams) => void,
-  toggleTaskCompleted: (task: Task) => void,
-  deleteTask: (task: Task) => void
+  toggleTaskCompleted: (task: Task) => Promise<void>,
+  updateTask: (task: Task, params: TaskUpdateParams) => Promise<void>,
+  deleteTask: (task: Task) => Promise<void>
 }
 
 export default function TodoList({
   tasks,
-  updateTask,
   toggleTaskCompleted,
+  updateTask,
   deleteTask
 }: Props) {
   return (

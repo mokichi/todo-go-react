@@ -6,6 +6,10 @@ import axios from 'axios'
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [completedTasks, setCompletedTasks] = useState<Task[]>([])
+
+  const compareTasks = (a: Task, b: Task) => {
+    return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
+  }
   const addTask = async (title: string) => {
     if (!title) {
       return
@@ -23,7 +27,7 @@ export default function App() {
         return data
       }
       return t
-    }))
+    }).sort(compareTasks))
   }
   const toggleTaskCompleted = async (task: Task) => {
     const { data } = await axios.patch<Task>(`/tasks/${task.id}`, {
@@ -31,14 +35,10 @@ export default function App() {
     })
     if (data.completed) {
       setTasks(tasks.filter(t => t.id !== data.id))
-      setCompletedTasks(completedTasks.concat(data).sort((a, b) => {
-        return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
-      }))
+      setCompletedTasks(completedTasks.concat(data).sort(compareTasks))
     } else {
       setCompletedTasks(completedTasks.filter(t => t.id !== data.id))
-      setTasks(tasks.concat(data).sort((a, b) => {
-        return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
-      }))
+      setTasks(tasks.concat(data).sort(compareTasks))
     }
   }
   const deleteTask = async (task: Task) => {
@@ -63,12 +63,13 @@ export default function App() {
       <TaskForm addTask={addTask} />
       <TodoList
         tasks={tasks} 
-        updateTask={updateTask}
         toggleTaskCompleted={toggleTaskCompleted}
+        updateTask={updateTask}
         deleteTask={deleteTask} />
       <TodoList
         tasks={completedTasks} 
         toggleTaskCompleted={toggleTaskCompleted}
+        updateTask={updateTask}
         deleteTask={deleteTask} />
     </div>
   )

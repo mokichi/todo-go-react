@@ -6,12 +6,17 @@ type Props = {
 
 export default function TaskForm({ addTask }: Props) {
   const inputEl = useRef<HTMLInputElement>(null)
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (inputEl.current) {
-      addTask(inputEl.current.value)
-      inputEl.current.value = ''
+    if (!inputEl.current) {
+      return
     }
+    const title = inputEl.current.value
+    if (!title) {
+      return
+    }
+    await addTask(title)
+    inputEl.current.value = ''
   }
 
   return (

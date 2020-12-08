@@ -5,7 +5,6 @@ import reportWebVitals from './reportWebVitals';
 import axios from 'axios'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL
-console.log(process.env.REACT_APP_API_BASE_URL)
 
 ReactDOM.render(
   <React.StrictMode>

@@ -5,3 +5,7 @@ declare type Task = {
   createdAt: string,
   updatedAt: string
 }
+
+declare type TaskUpdateParams = {
+  title?: string
+}

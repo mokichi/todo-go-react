@@ -11,7 +11,19 @@ export default function App() {
       return
     }
     const { data } = await axios.post<Task>('/tasks', { title })
-    setTasks(tasks.concat(data))
+    setTasks([data].concat(tasks))
+  }
+  const updateTask = async (task: Task, params: TaskUpdateParams) => {
+    if (!params.title) {
+      return
+    }
+    const { data } = await axios.patch<Task>(`/tasks/${task.id}`, params)
+    setTasks(tasks.map(t => {
+      if (t.id === data.id) {
+        return data
+      }
+      return t
+    }))
   }
   const toggleTaskCompleted = async (task: Task) => {
     const { data } = await axios.patch<Task>(`/tasks/${task.id}`, {
@@ -28,6 +40,11 @@ export default function App() {
         return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
       }))
     }
+  }
+  const deleteTask = async (task: Task) => {
+    await axios.delete(`/tasks/${task.id}`)
+    setTasks(tasks.filter(t => t.id !== task.id))
+    setCompletedTasks(completedTasks.filter(t => t.id !== task.id))
   }
   
   useEffect(() => {
@@ -46,10 +63,13 @@ export default function App() {
       <TaskForm addTask={addTask} />
       <TodoList
         tasks={tasks} 
-        toggleTaskCompleted={toggleTaskCompleted} />
+        updateTask={updateTask}
+        toggleTaskCompleted={toggleTaskCompleted}
+        deleteTask={deleteTask} />
       <TodoList
         tasks={completedTasks} 
-        toggleTaskCompleted={toggleTaskCompleted} />
+        toggleTaskCompleted={toggleTaskCompleted}
+        deleteTask={deleteTask} />
     </div>
   )
 }

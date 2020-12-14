@@ -28,7 +28,7 @@ services:
     image: node:14.15.1-alpine3.12
     command: yarn start
     env_file:
-      - .env.local
+      - ./spa/.env.local
     working_dir: /work
     volumes:
       - ./spa:/work

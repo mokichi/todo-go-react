@@ -1,9 +1,9 @@
 package main
 
 import (
-	"gorm.io/gorm"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"gorm.io/gorm"
 	"todo/internal/controller"
 	"todo/internal/orm"
 )

@@ -37,7 +37,7 @@ export default function useTodo() {
         tasks,
         completedTasks
       })
-    })
+    })()
     // eslint-disable-next-line
   }, [])
 
